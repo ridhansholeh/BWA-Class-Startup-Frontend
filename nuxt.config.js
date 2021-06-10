@@ -45,7 +45,7 @@ export default {
 		// https://go.nuxtjs.dev/pwa
 		'@nuxtjs/pwa',
 		// https://auth.nuxtjs.org
-		'@nuxtjs/auth-next',
+		'@nuxtjs/auth',
 	],
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -64,7 +64,7 @@ export default {
 				},
 				user: {
 					property: 'user',
-					// autoFetch: true
+					autoFetch: true,
 				},
 				endpoints: {
 					login: {
