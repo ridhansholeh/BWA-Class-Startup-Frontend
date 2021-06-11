@@ -14,7 +14,7 @@
 					<ul class="flex mt-2">
 						<li class="mr-6">
 							<nuxt-link
-								class="text-gray-800 font-bold"
+								class="text-gray-500 hover:text-gray-800"
 								to="/dashboard"
 							>
 								Your Projects
@@ -22,7 +22,7 @@
 						</li>
 						<li class="mr-6">
 							<nuxt-link
-								class="text-gray-500 hover:text-gray-800"
+								class="text-gray-800 font-bold"
 								to="/dashboard/transactions"
 							>
 								Your Transactions
@@ -33,7 +33,11 @@
 			</div>
 			<hr />
 			<div class="block mb-2">
-				<div class="w-full lg:max-w-full lg:flex mb-4">
+				<div
+					v-for="transaction in transactions.data"
+					:key="transaction.id"
+					class="w-full lg:max-w-full lg:flex mb-4"
+				>
 					<div
 						class="
 							h-48
@@ -45,7 +49,13 @@
 							text-center
 							overflow-hidden
 						"
-						style="background-color: #bbb"
+						:style="
+							'background-color: #bbb; background-position: center; background-image: url(\'' +
+							$axios.defaults.baseURL +
+							'/' +
+							transaction.campaign.image_url +
+							'\')'
+						"
 					></div>
 					<div
 						class="
@@ -63,7 +73,7 @@
 					>
 						<div>
 							<div class="text-gray-900 font-bold text-xl mb-1">
-								Cari Uang Buat Gunpla
+								{{ transaction.campaign.name }}
 							</div>
 							<p
 								class="
@@ -73,7 +83,14 @@
 									mb-2
 								"
 							>
-								Rp. 200.000.000 &middot; 12 September 2020
+								Rp.
+								{{
+									new Intl.NumberFormat().format(
+										transaction.amount
+									)
+								}}
+								&middot; {{ transaction.created_at }} &middot;
+								{{ transaction.status }}
 							</p>
 						</div>
 					</div>
@@ -87,3 +104,14 @@
 		<Footer />
 	</div>
 </template>
+
+<script>
+export default {
+	middleware: 'auth',
+	async asyncData({ $axios }) {
+		const transactions = await $axios.$get('/api/v1/transactions')
+
+		return { transactions }
+	},
+}
+</script>
